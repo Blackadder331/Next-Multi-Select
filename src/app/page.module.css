@@ -9,4 +9,5 @@
 
 .main section {
   padding-top: calc(50vh - 12rem);
+  max-width: 70vw;
 }
