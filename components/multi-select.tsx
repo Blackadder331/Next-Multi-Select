@@ -20,7 +20,7 @@ function MultiSelect() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <div onClick={toggleDropdown} className={styles.selector}>
         <span>
           {selectedOptions.length > 0

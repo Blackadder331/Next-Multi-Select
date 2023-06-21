@@ -9,6 +9,7 @@ export default function Home() {
         <h1>multi select</h1>
         <br></br>
         <MultiSelect></MultiSelect>
+        <h1>more content bullshit here</h1>
       </section>
     </main>
   );
