@@ -1,8 +1,12 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
+}
+
+.main section {
+  padding-top: calc(50vh - 12rem);
 }

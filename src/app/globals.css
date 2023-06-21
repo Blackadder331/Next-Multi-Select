@@ -100,6 +100,14 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  font-family: "Supply", monospace;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
