@@ -1,3 +1,7 @@
+
+<img width="1212" alt="cover" src="https://github.com/Blackadder331/Next-Multi-Select/assets/10698943/b045ef15-15bc-40ed-8a82-f8146a9fc97f">
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
