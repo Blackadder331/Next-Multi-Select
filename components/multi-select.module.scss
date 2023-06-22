@@ -2,7 +2,7 @@
   display: grid;
   justify-items: center;
   cursor: pointer;
-  width: 320px;
+//   width: 320px;
 }
 
 .selector {
@@ -20,7 +20,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  position: absolute;
   flex-wrap: wrap;
 }
 
