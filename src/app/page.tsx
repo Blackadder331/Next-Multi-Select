@@ -9,7 +9,9 @@ export default function Home() {
         <h1>multi select</h1>
         <br></br>
         <MultiSelect></MultiSelect>
-        <br/><br/>
+        <br />
+        <br />
+
         <p>
           The most fundamental unit of data on the internet is the bit, which is
           a binary digit that can take on one of two states, usually represented
@@ -55,6 +57,7 @@ export default function Home() {
           signals transmitted through fiber-optic cables allow for high-speed,
           long-distance data transmission.
         </p>
+        <div className={styles.gradient}></div>
       </section>
     </main>
   );
