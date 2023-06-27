@@ -1,4 +1,5 @@
 "use client";
+"use strict";
 import styles from "./multi-select.module.scss";
 import { useState, useRef, useEffect } from "react";
 
@@ -6,8 +7,9 @@ function MultiSelectARIA() {
   const options = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"];
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [focusIndex, setFocusIndex] = useState(-1);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const listboxRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLSpanElement>(null); // New ref for the arrow
 
   const handleSelect = (option: string) => {
     setSelectedOptions((prevState) =>
@@ -19,60 +21,110 @@ function MultiSelectARIA() {
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    setFocusIndex(-1); // reset focus when opening or closing
+    setActiveIndex(-1);
   };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        setFocusIndex((prev) => (prev + 1) % options.length);
-      } else if (event.key === "ArrowUp") {
-        event.preventDefault();
-        setFocusIndex((prev) => (prev - 1 + options.length) % options.length);
+      switch (event.key) {
+        case "ArrowDown":
+          event.preventDefault();
+          setIsOpen(true);
+          setActiveIndex((prevIndex) => (prevIndex + 1) % options.length);
+          break;
+        case "ArrowUp":
+          event.preventDefault();
+          setIsOpen(true);
+          setActiveIndex(
+            (prevIndex) => (prevIndex - 1 + options.length) % options.length
+          );
+          break;
+        case "Enter":
+        case " ":
+          event.preventDefault();
+          if (isOpen && activeIndex >= 0) {
+            handleSelect(options[activeIndex]);
+          } else {
+            setIsOpen(!isOpen);
+          }
+          break;
+        case "Escape":
+          setIsOpen(false);
+          break;
+        default:
+          break;
       }
     };
 
-    if (isOpen) {
-      containerRef.current?.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      containerRef.current?.removeEventListener("keydown", handleKeyDown);
+    const handleArrowKeyDown = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        event.preventDefault();
+        toggleDropdown();
+      }
     };
-  }, [isOpen, options.length]);
+
+    listboxRef.current?.addEventListener("keydown", handleKeyDown);
+    arrowRef.current?.addEventListener("keydown", handleArrowKeyDown);
+    return () => {
+      listboxRef.current?.removeEventListener("keydown", handleKeyDown);
+      arrowRef.current?.removeEventListener("keydown", handleArrowKeyDown);
+    };
+  }, [options.length, isOpen, activeIndex]);
 
   return (
     <div
       className={styles.container}
+      ref={listboxRef}
+      tabIndex={0}
       role="listbox"
       aria-haspopup="true"
       aria-expanded={isOpen}
-      ref={containerRef}
-      tabIndex={0} // To allow focus
       aria-activedescendant={
-        isOpen && focusIndex >= 0 ? `option-${options[focusIndex]}` : undefined
+        isOpen && activeIndex >= 0
+          ? `option-${options[activeIndex]}`
+          : undefined
       }
     >
-      <div onClick={toggleDropdown} className={styles.selector}>
+      <div
+        onClick={toggleDropdown}
+        onKeyDown={(event) => {
+          if (event.key === " " || event.key === "Enter") {
+            event.preventDefault();
+            toggleDropdown();
+          }
+        }}
+        className={styles.selector}
+        tabIndex={0}
+        role="button"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+      >
         <span>
           {selectedOptions.length > 0
             ? selectedOptions.join(", ")
             : "Select options..."}
         </span>
-        <span className={styles.arrow}>{isOpen ? "▲" : "▼"}</span>
+        <span
+          ref={arrowRef}
+          tabIndex={0} // Make the arrow focusable
+          className={styles.arrow}
+        >
+          {isOpen ? "▲" : "▼"}
+        </span>
       </div>
       {isOpen && (
         <div
           style={{}}
           className={styles.selections}
-          aria-owns={options.map((option) => `option-${option}`).join(" ")}
+          aria-owns={options
+            .map((option, index) => `option-${index}`)
+            .join(" ")}
         >
           {options.map((option, index) => (
             <div
               key={option}
               role="option"
-              id={`option-${option}`}
+              id={`option-${index}`}
               aria-selected={selectedOptions.includes(option)}
             >
               <label>
