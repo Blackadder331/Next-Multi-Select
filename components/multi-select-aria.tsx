@@ -9,7 +9,6 @@ function MultiSelectARIA() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const listboxRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<HTMLSpanElement>(null); // New ref for the arrow
 
   const handleSelect = (option: string) => {
     setSelectedOptions((prevState) =>
@@ -56,18 +55,9 @@ function MultiSelectARIA() {
       }
     };
 
-    const handleArrowKeyDown = (event: KeyboardEvent) => {
-      if (event.key === " ") {
-        event.preventDefault();
-        toggleDropdown();
-      }
-    };
-
     listboxRef.current?.addEventListener("keydown", handleKeyDown);
-    arrowRef.current?.addEventListener("keydown", handleArrowKeyDown);
     return () => {
       listboxRef.current?.removeEventListener("keydown", handleKeyDown);
-      arrowRef.current?.removeEventListener("keydown", handleArrowKeyDown);
     };
   }, [options.length, isOpen, activeIndex]);
 
@@ -79,6 +69,7 @@ function MultiSelectARIA() {
       role="listbox"
       aria-haspopup="true"
       aria-expanded={isOpen}
+      aria-multiselectable="true"
       aria-activedescendant={
         isOpen && activeIndex >= 0
           ? `option-${options[activeIndex]}`
@@ -104,17 +95,10 @@ function MultiSelectARIA() {
             ? selectedOptions.join(", ")
             : "Select options..."}
         </span>
-        <span
-          ref={arrowRef}
-          tabIndex={0} // Make the arrow focusable
-          className={styles.arrow}
-        >
-          {isOpen ? "▲" : "▼"}
-        </span>
+        <span className={styles.arrow}>{isOpen ? "▲" : "▼"}</span>
       </div>
       {isOpen && (
         <div
-          style={{}}
           className={styles.selections}
           aria-owns={options
             .map((option, index) => `option-${index}`)
@@ -137,7 +121,7 @@ function MultiSelectARIA() {
                 {option}
               </label>
             </div>
-          ))}
+         ))}
         </div>
       )}
     </div>
