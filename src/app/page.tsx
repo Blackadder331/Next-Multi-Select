@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import MultiSelect from "../../components/multi-select";
+import MultiSelectARIA from "../../components/multi-select-aria";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
       <section>
         <h1>multi select</h1>
         <br></br>
-        <MultiSelect></MultiSelect>
+        <MultiSelectARIA></MultiSelectARIA>
         <br />
         <br />
 
